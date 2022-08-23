@@ -1,6 +1,6 @@
 module.exports = {
-  entry: './src/index.ts',
-  target: 'node',
+  entry: "./src/index.ts",
+  target: "node",
   // default output dir
   // output: {
   //   path: __dirname + '/dist',
@@ -10,12 +10,12 @@ module.exports = {
     rules: [
       {
         test: /\.ts$/,
-        use: ['ts-loader'],
-        exclude: /node_modules/
-      }
-    ]
+        use: ["ts-loader"],
+        exclude: /node_modules/,
+      },
+    ],
   },
   resolve: {
-    extensions: ['.ts', '.js']
-  }
+    extensions: [".ts", ".js"],
+  },
 };
