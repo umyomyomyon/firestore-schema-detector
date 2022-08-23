@@ -1,2 +1,3 @@
 #!/usr/bin/env node
-require('../dist/main.js');
+// eslint-disable-next-line import/extensions
+require("../dist/main.js");
