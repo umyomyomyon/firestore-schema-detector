@@ -10,3 +10,15 @@ export const getDocumentData = async (
   const docData = docSnapShot.data();
   return docData;
 };
+
+export const checkTimeStamp = (arg: firestore.DocumentData | undefined) => {
+  if (!arg) return;
+  if (arg.timestampField) {
+    const fsTimeStamp = arg.timestampField;
+    const dateFromFirestoreTimeStamp = arg.timestampField.toDate();
+    console.log(dateFromFirestoreTimeStamp);
+    console.log(fsTimeStamp instanceof firestore.FieldValue);
+    console.log(dateFromFirestoreTimeStamp instanceof Date);
+    console.log(fsTimeStamp);
+  }
+};
