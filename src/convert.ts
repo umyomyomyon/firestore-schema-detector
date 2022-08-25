@@ -39,14 +39,19 @@ export const convert = (field: unknown): ConvertReturnType | undefined => {
   return undefined;
 };
 
-export const convertDocumentData = (docData: DocumentData) => {
+export const convertDocumentData = (docData: DocumentData): any => {
   const keyConvertValues = Object.entries(docData).map(([key, value]) => ({
     key,
-    value: convert(value),
+    value,
+    typeString: convert(value),
   }));
-  const result = {} as { [key: string]: ConvertReturnType | undefined };
-  keyConvertValues.forEach(({ key, value }) => {
-    result[key] = value;
+  const result = {} as { [key: string]: ConvertReturnType | undefined};
+  keyConvertValues.forEach(({ key, value, typeString }) => {
+    if (typeString === 'map') {
+      result[key] = convertDocumentData(value);
+    } else {
+      result[key] = typeString
+    }
   });
   return result;
 };

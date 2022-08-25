@@ -38,32 +38,6 @@ describe("convert tests.", () => {
   });
 });
 
-describe("recursive convert", () => {
-  it("recursive", () => {
-    const input = {
-      map: {
-        boolean: false,
-        string: "",
-        number: 0,
-        null: null,
-        array: [],
-        timestamp: Timestamp.fromDate(new Date()),
-      },
-    };
-    const expectedValue = {
-      map: {
-        boolean: "boolean",
-        string: "string",
-        number: "number",
-        null: "null",
-        array: "array",
-        timestamp: "timestamp",
-      },
-    };
-    expect(convert(input)).toBe(expectedValue);
-  });
-});
-
 describe("convertDocumentData tests.", () => {
   it("type check", () => {
     const input = {
@@ -79,7 +53,7 @@ describe("convertDocumentData tests.", () => {
     const testExpect = {
       array: "array",
       boolean: "boolean",
-      map: "map",
+      map: { key: "string" },
       null: "null",
       timestamp: "timestamp",
       string: "string",
@@ -89,56 +63,58 @@ describe("convertDocumentData tests.", () => {
   });
 });
 
-// describe("deep map convert", () => {
-//   it("deep map test", () => {
-//     const input = {
-//       start: {
-//         mapfield: "",
-//         map1: {
-//           map1field: "",
-//           map2: {
-//             map2field: "",
-//             map3: {
-//               map3field: "",
-//               map4: {
-//                 map4field: "",
-//                 map5: {
-//                   array: ["", 0, true, null],
-//                   boolean: false,
-//                   null: null,
-//                   number: 0,
-//                   string: "",
-//                   timestamp: Timestamp.fromDate(new Date()),
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     };
-//     const expectedValue = {
-//       start: {
-//         mapfield: "string",
-//         map1: {
-//           map1field: "string",
-//           map2: {
-//             map2field: "string",
-//             map3: {
-//               map3field: "string",
-//               map4: {
-//                 map4: "string",
-//                 map5: {
-//                   array: "array",
-//                   boolean: "boolean",
-//                   null: "null",
-//                   string: "string",
-//                   timestamp: "timestamp",
-//                 },
-//               },
-//             },
-//           },
-//         },
-//       },
-//     };
-//   });
-// });
+describe("deep map convert", () => {
+  it("deep map test", () => {
+    const input = {
+      start: {
+        mapfield: "",
+        map1: {
+          map1field: "",
+          map2: {
+            map2field: "",
+            map3: {
+              map3field: "",
+              map4: {
+                map4field: "",
+                map5: {
+                  array: ["", 0, true, null],
+                  boolean: false,
+                  null: null,
+                  number: 0,
+                  string: "",
+                  timestamp: Timestamp.fromDate(new Date()),
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const expectedValue = {
+      start: {
+        mapfield: "string",
+        map1: {
+          map1field: "string",
+          map2: {
+            map2field: "string",
+            map3: {
+              map3field: "string",
+              map4: {
+                map4field: "string",
+                map5: {
+                  array: "array",
+                  boolean: "boolean",
+                  null: "null",
+                  number: "number",
+                  string: "string",
+                  timestamp: "timestamp",
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    expect(convertDocumentData(input)).toStrictEqual(expectedValue);
+  });
+});
