@@ -47,6 +47,8 @@ export const convertDocumentData = (docData: DocumentData): any => {
   }));
   const result = {} as { [key: string]: ConvertReturnType | undefined};
   keyConvertValues.forEach(({ key, value, typeString }) => {
+    // 再帰処理
+    // typeStringがmapではなくなるまでconvertDocumentDataを繰り返す
     if (typeString === 'map') {
       result[key] = convertDocumentData(value);
     } else {

@@ -117,4 +117,104 @@ describe("deep map convert", () => {
     };
     expect(convertDocumentData(input)).toStrictEqual(expectedValue);
   });
+
+  it("deep map test", () => {
+    const input = {
+      start: {
+        mapfield: "",
+        map1: {
+          map1field: "",
+          map2: {
+            map2field: "",
+            map3: {
+              map3field: "",
+              map4: {
+                map4field: "",
+                map5: {
+                  array: ["", 0, true, null],
+                  boolean: false,
+                  null: null,
+                  number: 0,
+                  string: "",
+                  timestamp: Timestamp.fromDate(new Date()),
+                },
+              },
+            },
+          },
+        },
+      },
+      start2: {
+        mapfield: "",
+        map1: {
+          map1field: "",
+          map2: {
+            map2field: "",
+            map3: {
+              map3field: "",
+              map4: {
+                map4field: "",
+                map5: {
+                  array: ["", 0, true, null],
+                  boolean: false,
+                  null: null,
+                  number: 0,
+                  string: "",
+                  timestamp: Timestamp.fromDate(new Date()),
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    const expectedValue = {
+      start: {
+        mapfield: "string",
+        map1: {
+          map1field: "string",
+          map2: {
+            map2field: "string",
+            map3: {
+              map3field: "string",
+              map4: {
+                map4field: "string",
+                map5: {
+                  array: "array",
+                  boolean: "boolean",
+                  null: "null",
+                  number: "number",
+                  string: "string",
+                  timestamp: "timestamp",
+                },
+              },
+            },
+          },
+        },
+      },
+      start2: {
+        mapfield: "string",
+        map1: {
+          map1field: "string",
+          map2: {
+            map2field: "string",
+            map3: {
+              map3field: "string",
+              map4: {
+                map4field: "string",
+                map5: {
+                  array: "array",
+                  boolean: "boolean",
+                  null: "null",
+                  number: "number",
+                  string: "string",
+                  timestamp: "timestamp",
+                },
+              },
+            },
+          },
+        },
+      },
+    };
+    expect(convertDocumentData(input)).toStrictEqual(expectedValue);
+  });
 });
