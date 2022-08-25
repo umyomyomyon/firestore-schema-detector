@@ -36,6 +36,11 @@ describe("convert tests.", () => {
     const input = {};
     expect(convert(input)).toBe("{}");
   });
+
+  it("convert to string from non-empty map", () => {
+    const input = { key: "value" };
+    expect(convert(input)).toBe("map");
+  });
 });
 
 describe("convertDocumentData tests.", () => {
