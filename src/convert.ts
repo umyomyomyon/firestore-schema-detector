@@ -1,16 +1,7 @@
 import { DocumentData } from "firebase-admin/firestore";
+import { TypeString, ConvertedDocument } from "./types/convert";
 
-type ConvertReturnType =
-  | "boolean"
-  | "string"
-  | "number"
-  | "null"
-  | "array"
-  | "{}"
-  | "map"
-  | "timestamp";
-
-export const convert = (field: unknown): ConvertReturnType | undefined => {
+export const convert = (field: unknown): TypeString | undefined => {
   if (typeof field === "boolean") {
     return "boolean";
   }
@@ -39,13 +30,15 @@ export const convert = (field: unknown): ConvertReturnType | undefined => {
   return undefined;
 };
 
-export const convertDocumentData = (docData: DocumentData): any => {
+export const convertDocumentData = (
+  docData: DocumentData
+): ConvertedDocument => {
   const keyConvertValues = Object.entries(docData).map(([key, value]) => ({
     key,
     value,
     typeString: convert(value),
   }));
-  const result = {} as { [key: string]: ConvertReturnType | undefined };
+  const result = {} as ConvertedDocument;
   keyConvertValues.forEach(({ key, value, typeString }) => {
     // 再帰処理
     // typeStringがmapではなくなるまでconvertDocumentDataを繰り返す
