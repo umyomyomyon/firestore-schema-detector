@@ -6,6 +6,7 @@ type ConvertReturnType =
   | "number"
   | "null"
   | "array"
+  | "{}"
   | "map"
   | "timestamp";
 
@@ -27,6 +28,9 @@ export const convert = (field: unknown): ConvertReturnType | undefined => {
   }
   if (typeof field === "object") {
     const keys = Object.keys(field);
+    if (keys.length === 0) {
+      return "{}";
+    }
     if (keys.includes("_seconds") && keys.includes("_nanoseconds")) {
       return "timestamp";
     }

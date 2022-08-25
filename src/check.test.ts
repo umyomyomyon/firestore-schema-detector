@@ -27,14 +27,40 @@ describe("convert tests.", () => {
     expect(convert(input)).toBe("array");
   });
 
-  it("convert to string from map", () => {
-    const input = {};
-    expect(convert(input)).toBe("map");
-  });
-
   it("convert to string from timestamp", () => {
     const input = Timestamp.fromDate(new Date());
     expect(convert(input)).toBe("timestamp");
+  });
+
+  it("convert to string from empty map", () => {
+    const input = {};
+    expect(convert(input)).toBe("{}");
+  });
+});
+
+describe("recursive convert", () => {
+  it("recursive", () => {
+    const input = {
+      map: {
+        boolean: false,
+        string: "",
+        number: 0,
+        null: null,
+        array: [],
+        timestamp: Timestamp.fromDate(new Date()),
+      },
+    };
+    const expectedValue = {
+      map: {
+        boolean: "boolean",
+        string: "string",
+        number: "number",
+        null: "null",
+        array: "array",
+        timestamp: "timestamp",
+      },
+    };
+    expect(convert(input)).toBe(expectedValue);
   });
 });
 
@@ -62,3 +88,57 @@ describe("convertDocumentData tests.", () => {
     expect(convertDocumentData(input)).toStrictEqual(testExpect);
   });
 });
+
+// describe("deep map convert", () => {
+//   it("deep map test", () => {
+//     const input = {
+//       start: {
+//         mapfield: "",
+//         map1: {
+//           map1field: "",
+//           map2: {
+//             map2field: "",
+//             map3: {
+//               map3field: "",
+//               map4: {
+//                 map4field: "",
+//                 map5: {
+//                   array: ["", 0, true, null],
+//                   boolean: false,
+//                   null: null,
+//                   number: 0,
+//                   string: "",
+//                   timestamp: Timestamp.fromDate(new Date()),
+//                 },
+//               },
+//             },
+//           },
+//         },
+//       },
+//     };
+//     const expectedValue = {
+//       start: {
+//         mapfield: "string",
+//         map1: {
+//           map1field: "string",
+//           map2: {
+//             map2field: "string",
+//             map3: {
+//               map3field: "string",
+//               map4: {
+//                 map4: "string",
+//                 map5: {
+//                   array: "array",
+//                   boolean: "boolean",
+//                   null: "null",
+//                   string: "string",
+//                   timestamp: "timestamp",
+//                 },
+//               },
+//             },
+//           },
+//         },
+//       },
+//     };
+//   });
+// });
