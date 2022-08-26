@@ -1,5 +1,5 @@
 import { DocumentData } from "firebase-admin/firestore";
-import { TypeString, ConvertedDocument } from "./types/convert";
+import { TypeString, ConvertedDocument } from "../types/convert";
 
 export const convert = (field: unknown): TypeString | undefined => {
   if (typeof field === "boolean") {
@@ -50,3 +50,6 @@ export const convertDocumentData = (
   });
   return result;
 };
+
+export const convertDocs = (docs: DocumentData[]) =>
+  docs.map((doc) => convertDocumentData(doc));
