@@ -50,3 +50,6 @@ export const convertDocumentData = (
   });
   return result;
 };
+
+export const convertDocs = (docs: DocumentData[]) =>
+  docs.map((doc) => convertDocumentData(doc));
