@@ -1,5 +1,5 @@
 import { Timestamp } from "firebase-admin/firestore";
-import { convert, convertDocumentData } from "./convert";
+import { convert, convertDocumentData } from "../convert";
 
 describe("convert tests.", () => {
   it("convert to string from boolean", () => {
