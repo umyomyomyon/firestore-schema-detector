@@ -10,7 +10,7 @@ export type TypeString =
 
 // recursive type definition
 // eslint-disable-next-line no-use-before-define
-type ConvertedDocumentValue = TypeString | undefined | ConvertedDocument;
+export type ConvertedDocumentValue = TypeString | undefined | ConvertedDocument;
 export interface ConvertedDocument {
   [key: string]: ConvertedDocumentValue;
 }
