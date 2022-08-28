@@ -3,6 +3,28 @@ import { JoinMeta, JoinResult } from "../types/join";
 import { DocsIntegrater } from "./join";
 
 describe("joinConvertedDocs tests", () => {
+  it("empty", () => {
+    const convertedDocs: ConvertedDocument[] = [];
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([{}, { optionals: [] }]);
+  });
+
+  it("one", () => {
+    const convertedDocs: ConvertedDocument[] = [
+      {
+        string: "string",
+      },
+    ];
+    const joinResult: JoinResult = {
+      string: ["string"],
+    };
+    const joinMeta: JoinMeta = {
+      optionals: [],
+    };
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
+  });
+
   it("simple", () => {
     const convertedDocs: ConvertedDocument[] = [
       {
