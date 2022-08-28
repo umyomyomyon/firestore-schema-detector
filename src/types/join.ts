@@ -1,6 +1,6 @@
-import { TypeString } from "./convert";
+import { ConvertedDocumentValue } from "./convert";
 
-export type JoinResult = Record<string, TypeString[]>;
+export type JoinResult = Record<string, ConvertedDocumentValue[]>;
 
 export type JoinMeta = {
   optionals: string[];

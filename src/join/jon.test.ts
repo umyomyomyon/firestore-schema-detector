@@ -1,6 +1,6 @@
 import { ConvertedDocument } from "../types/convert";
 import { JoinMeta, JoinResult } from "../types/join";
-import { joinConvertedDocs } from "./join";
+import { DocsIntegrater } from "./join";
 
 describe("joinConvertedDocs tests", () => {
   it("simple", () => {
@@ -12,18 +12,16 @@ describe("joinConvertedDocs tests", () => {
         strBool: "boolean",
       },
     ];
-    const joinResult: JoinResult = { string: ["string", "boolean"] };
+    const joinResult: JoinResult = { strBool: ["string", "boolean"] };
     const joinMeta: JoinMeta = {
       optionals: [],
     };
-    expect(joinConvertedDocs(convertedDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 
   it("simple, same type", () => {
-    const convertDocs: ConvertedDocument[] = [
+    const convertedDocs: ConvertedDocument[] = [
       {
         string: "string",
       },
@@ -35,37 +33,39 @@ describe("joinConvertedDocs tests", () => {
     const joinMeta: JoinMeta = {
       optionals: [],
     };
-    expect(joinConvertedDocs(convertDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 
   it("multiple properties", () => {
-    const convertDocs: ConvertedDocument[] = [
+    const convertedDocs: ConvertedDocument[] = [
       {
         strTime: "string",
         boolNull: "boolean",
         numStr: "number",
+        someOptional: "string",
       },
       {
         strTime: "timestamp",
         boolNull: "null",
         numStr: "string",
+        someOp: "{}",
+        thisIsOp: "timestamp",
       },
     ];
     const joinResult: JoinResult = {
       strTime: ["string", "timestamp"],
       boolNull: ["boolean", "null"],
       numStr: ["number", "string"],
+      someOptional: ["string"],
+      someOp: ["{}"],
+      thisIsOp: ["timestamp"],
     };
     const joinMeta: JoinMeta = {
-      optionals: [],
+      optionals: ["someOptional", "someOp", "thisIsOp"],
     };
-    expect(joinConvertedDocs(convertDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 
   it("three", () => {
@@ -86,10 +86,8 @@ describe("joinConvertedDocs tests", () => {
     const joinMeta: JoinMeta = {
       optionals: [],
     };
-    expect(joinConvertedDocs(convertedDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 
   it("has optional", () => {
@@ -109,10 +107,8 @@ describe("joinConvertedDocs tests", () => {
     const joinMeta: JoinMeta = {
       optionals: ["bool"],
     };
-    expect(joinConvertedDocs(convertedDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 
   it("all optional", () => {
@@ -131,9 +127,7 @@ describe("joinConvertedDocs tests", () => {
     const joinMeta: JoinMeta = {
       optionals: ["str", "bool"],
     };
-    expect(joinConvertedDocs(convertedDocs)).toStrictEqual([
-      joinResult,
-      joinMeta,
-    ]);
+    const intergrater = new DocsIntegrater(convertedDocs);
+    expect(intergrater.joinDocs()).toStrictEqual([joinResult, joinMeta]);
   });
 });

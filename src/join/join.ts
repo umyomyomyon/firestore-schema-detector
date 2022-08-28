@@ -1,6 +1,90 @@
-import { ConvertedDocument } from "../types/convert";
+import { ConvertedDocument, ConvertedDocumentValue } from "../types/convert";
 import { JoinResult, JoinMeta } from "../types/join";
 
-export const joinConvertedDocs = (
-  convertedDocs: ConvertedDocument[]
-): [JoinResult, JoinMeta] => [{ a: ["string"] }, { optionals: [] }];
+export class DocsIntegrater {
+  docs: ConvertedDocument[];
+
+  constructor(convertedDocs: ConvertedDocument[]) {
+    this.docs = convertedDocs;
+  }
+
+  joinDocs(): [JoinResult, JoinMeta] {
+    const result = this.makeResult();
+    const meta = this.makeMeta();
+    return [result, meta];
+  }
+
+  makeResult(): JoinResult {
+    const allKeys = this.extractAllKeysFromDocs();
+    const keyWithEmptyList = this.makeKeyWithEmptyList(allKeys);
+    const result = this.fillKeyWithEmptyList(keyWithEmptyList);
+    return result;
+  }
+
+  makeMeta(): JoinMeta {
+    const allKeys = this.extractAllKeysFromDocs();
+    const countUp = this.makeCountUp(allKeys);
+    const optionals = this.makeOptionals(countUp);
+    return { optionals };
+  }
+
+  extractAllKeysFromDocs() {
+    const allKeysAllowDuplication = this.docs.flatMap((doc) =>
+      Object.keys(doc)
+    );
+    return [...new Set(allKeysAllowDuplication)];
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  makeKeyWithEmptyList(allKeys: string[]): {
+    [key: string]: ConvertedDocumentValue[];
+  } {
+    return allKeys.reduce(
+      (acc, key) => ({ ...acc, [key]: [] }),
+      {} as { [key: string]: ConvertedDocumentValue[] }
+    );
+  }
+
+  makeCountUp(allKeys: string[]) {
+    const countUpBase: { [key: string]: number } = {};
+    const initialCountUp = allKeys.reduce((acc, key) => {
+      acc[key] = 0;
+      return acc;
+    }, countUpBase);
+    const countUp = this.docs.reduce((acc, doc) => {
+      Object.keys(doc).forEach((key) => {
+        acc[key] += 1;
+      });
+      return acc;
+    }, initialCountUp);
+    return countUp;
+  }
+
+  fillKeyWithEmptyList(keyWithEmptyList: {
+    [key: string]: ConvertedDocumentValue[];
+  }) {
+    const filled = this.docs.reduce((acc, doc) => {
+      Object.entries(doc).forEach(([key, convertedDocumentValue]) => {
+        if (acc[key].length) {
+          acc[key].push(convertedDocumentValue);
+        } else {
+          acc[key] = [convertedDocumentValue];
+        }
+      });
+      return acc;
+    }, keyWithEmptyList);
+    return Object.entries(filled).reduce((acc, [key, filledDocValues]) => {
+      acc[key] = [...new Set(filledDocValues)];
+      return acc;
+    }, filled);
+  }
+
+  makeOptionals(countUp: { [key: string]: number }) {
+    return Object.entries(countUp)
+      .map(([key, count]) => {
+        if (count !== this.docs.length) return key;
+        return undefined;
+      })
+      .filter((v): v is string => !!v);
+  }
+}
