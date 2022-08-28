@@ -14,21 +14,21 @@ export class DocsIntegrater {
     return [result, meta];
   }
 
-  makeResult(): JoinResult {
+  private makeResult(): JoinResult {
     const allKeys = this.extractAllKeysFromDocs();
     const keyWithEmptyList = this.makeKeyWithEmptyList(allKeys);
     const result = this.fillKeyWithEmptyList(keyWithEmptyList);
     return result;
   }
 
-  makeMeta(): JoinMeta {
+  private makeMeta(): JoinMeta {
     const allKeys = this.extractAllKeysFromDocs();
     const countUp = this.makeCountUp(allKeys);
     const optionals = this.makeOptionals(countUp);
     return { optionals };
   }
 
-  extractAllKeysFromDocs() {
+  private extractAllKeysFromDocs() {
     const allKeysAllowDuplication = this.docs.flatMap((doc) =>
       Object.keys(doc)
     );
@@ -36,7 +36,7 @@ export class DocsIntegrater {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  makeKeyWithEmptyList(allKeys: string[]): {
+  private makeKeyWithEmptyList(allKeys: string[]): {
     [key: string]: ConvertedDocumentValue[];
   } {
     return allKeys.reduce(
@@ -45,7 +45,7 @@ export class DocsIntegrater {
     );
   }
 
-  makeCountUp(allKeys: string[]) {
+  private makeCountUp(allKeys: string[]) {
     const countUpBase: { [key: string]: number } = {};
     const initialCountUp = allKeys.reduce((acc, key) => {
       acc[key] = 0;
@@ -60,7 +60,7 @@ export class DocsIntegrater {
     return countUp;
   }
 
-  fillKeyWithEmptyList(keyWithEmptyList: {
+  private fillKeyWithEmptyList(keyWithEmptyList: {
     [key: string]: ConvertedDocumentValue[];
   }) {
     const filled = this.docs.reduce((acc, doc) => {
@@ -79,7 +79,7 @@ export class DocsIntegrater {
     }, filled);
   }
 
-  makeOptionals(countUp: { [key: string]: number }) {
+  private makeOptionals(countUp: { [key: string]: number }) {
     return Object.entries(countUp)
       .map(([key, count]) => {
         if (count !== this.docs.length) return key;
