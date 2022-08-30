@@ -45,6 +45,11 @@ type ${typeName} = {
           const str = stringify(convertedDocumentValue);
           return str;
         }
+        if (convertedDocumentValue === "array") return "Array<unknown>";
+        if (convertedDocumentValue === "{}") return "Record<string, never>";
+        if (convertedDocumentValue === "timestamp") {
+          return "firebase.firestore.Timestamp";
+        }
         return convertedDocumentValue;
       })
       .join(" | ");

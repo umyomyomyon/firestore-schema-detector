@@ -10,7 +10,35 @@ describe("builder tests", () => {
     const joinMeta: JoinMeta = { optionals: [] };
     const expectedValue = `
 type Document = {
-  string: string | boolean | timestamp;
+  string: string | boolean | firebase.firestore.Timestamp;
+};`;
+    const builder = new ViewTextBuilder(joinResult, joinMeta);
+    expect(builder.build(name)).toBe(expectedValue);
+  });
+
+  it("not primitive", () => {
+    const name = "document";
+    const joinResult: JoinResult = {
+      string: ["array", "{}", "timestamp"],
+    };
+    const joinMeta: JoinMeta = { optionals: [] };
+    const expectedValue = `
+type Document = {
+  string: Array<unknown> | Record<string, never> | firebase.firestore.Timestamp;
+};`;
+    const builder = new ViewTextBuilder(joinResult, joinMeta);
+    expect(builder.build(name)).toBe(expectedValue);
+  });
+
+  it("null", () => {
+    const name = "document";
+    const joinResult: JoinResult = {
+      string: ["null"],
+    };
+    const joinMeta: JoinMeta = { optionals: [] };
+    const expectedValue = `
+type Document = {
+  string: null;
 };`;
     const builder = new ViewTextBuilder(joinResult, joinMeta);
     expect(builder.build(name)).toBe(expectedValue);
@@ -26,7 +54,7 @@ type Document = {
     const expectedValue = `
 type Document = {
   string: string | boolean;
-  opt?: array;
+  opt?: Array<unknown>;
 };`;
     const builder = new ViewTextBuilder(joinResult, joinMeta);
     expect(builder.build(name)).toBe(expectedValue);
@@ -43,8 +71,8 @@ type Document = {
     const expectedValue = `
 type Document = {
   string: string | boolean;
-  opt1?: array | number;
-  opt2?: string | timestamp;
+  opt1?: Array<unknown> | number;
+  opt2?: string | firebase.firestore.Timestamp;
 };`;
     const builder = new ViewTextBuilder(joinResult, joinMeta);
     expect(builder.build(name)).toBe(expectedValue);
