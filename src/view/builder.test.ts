@@ -1,6 +1,5 @@
 import { ViewTextBuilder } from "./builder";
 import { JoinResult, JoinMeta } from "../types/join";
-import { ConvertedDocument } from "../types/convert";
 
 describe("builder tests", () => {
   it("simple", () => {
@@ -55,24 +54,69 @@ type Document = {
 describe("map build tests", () => {
   it("simple", () => {
     const name = "document";
-    const converted: ConvertedDocument = {
-      map: {
-        map: {
-          map: {
-            map: {
-              string: "string",
-              number: "number",
-            },
-          },
-        },
-      },
-    };
     const joinResult: JoinResult = {
-      map: [converted],
+      map: [
+        {
+          string: "string",
+          number: "number",
+        },
+      ],
     };
     const expectedValue = `
 type Document = {
-  map: Record<string, unknown>;
+  map: {string:string,number:number};
+};`;
+    const builder = new ViewTextBuilder(joinResult, { optionals: [] });
+    expect(builder.build(name)).toStrictEqual(expectedValue);
+  });
+
+  it("or", () => {
+    const name = "document";
+    const joinResult: JoinResult = {
+      map: [
+        {
+          string: "string",
+          number: "number",
+        },
+        {
+          null: "null",
+        },
+      ],
+    };
+    const expectedValue = `
+type Document = {
+  map: {string:string,number:number} | {null:null};
+};`;
+    const builder = new ViewTextBuilder(joinResult, { optionals: [] });
+    expect(builder.build(name)).toStrictEqual(expectedValue);
+  });
+
+  it("multi properties", () => {
+    const name = "document";
+    const joinResult: JoinResult = {
+      map: [
+        {
+          string: "string",
+          number: "number",
+        },
+        {
+          null: "null",
+        },
+      ],
+      map2: [
+        {
+          number: "number",
+          null: "null",
+        },
+        {
+          boolean: "boolean",
+        },
+      ],
+    };
+    const expectedValue = `
+type Document = {
+  map: {string:string,number:number} | {null:null};
+  map2: {number:number,null:null} | {boolean:boolean};
 };`;
     const builder = new ViewTextBuilder(joinResult, { optionals: [] });
     expect(builder.build(name)).toStrictEqual(expectedValue);

@@ -1,5 +1,6 @@
 import { ConvertedDocumentValue, isConvertedDocument } from "../types/convert";
 import { JoinResult, JoinMeta } from "../types/join";
+import { stringify } from "./stringify";
 
 export class ViewTextBuilder {
   result: JoinResult;
@@ -41,7 +42,8 @@ type ${typeName} = {
     return convertedDocumentValues
       .map((convertedDocumentValue) => {
         if (isConvertedDocument(convertedDocumentValue)) {
-          return "Record<string, unknown>";
+          const str = stringify(convertedDocumentValue);
+          return str;
         }
         return convertedDocumentValue;
       })
