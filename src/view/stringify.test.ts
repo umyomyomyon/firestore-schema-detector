@@ -6,9 +6,7 @@ describe("stringify tests", () => {
     const input: ConvertedDocument = {
       key: "string",
     };
-    const e = `{
-  key: "string"
-}`;
+    const e = `{key:string}`;
     expect(stringify(input)).toBe(e);
   });
 
@@ -17,10 +15,20 @@ describe("stringify tests", () => {
       key: "string",
       key2: "number",
     };
-    const e = `{
-  key: "string",
-  key2: "number"
-}`;
+    const e = `{key:string,key2:number}`;
+    expect(stringify(input)).toBe(e);
+  });
+
+  it("2 keys", () => {
+    const input: ConvertedDocument = {
+      string: "string",
+      number: "number",
+      array: "array",
+      empty: "{}",
+      null: "null",
+      timestamp: "timestamp",
+    };
+    const e = `{string:string,number:number,array:Array<unknown>,empty:Record<string, never>,null:null,timestamp:firebase.firestore.Timestamp}`;
     expect(stringify(input)).toBe(e);
   });
 
@@ -31,12 +39,7 @@ describe("stringify tests", () => {
         innerKey2: "string",
       },
     };
-    const e = `{
-  key: {
-    innerKey: "string",
-    innerKey2: "string"
-  }
-}`;
+    const e = `{key:{innerKey:string,innerKey2:string}}`;
     expect(stringify(input)).toBe(e);
   });
 
@@ -48,13 +51,7 @@ describe("stringify tests", () => {
         },
       },
     };
-    const e = `{
-  key: {
-    key: {
-      moreInnerKey: "string"
-    }
-  }
-}`;
+    const e = `{key:{key:{moreInnerKey:string}}}`;
     expect(stringify(input)).toBe(e);
   });
 
@@ -75,22 +72,7 @@ describe("stringify tests", () => {
         },
       },
     };
-    const e = `{
-  key: {
-    key: {
-      key: {
-        key: {
-          key: {
-            deepInnerKey: "string",
-            key: {
-              moreDeepInnerKey: "number"
-            }
-          }
-        }
-      }
-    }
-  }
-}`;
+    const e = `{key:{key:{key:{key:{key:{deepInnerKey:string,key:{moreDeepInnerKey:number}}}}}}}`;
     expect(stringify(input)).toBe(e);
   });
 });
