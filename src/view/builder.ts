@@ -50,6 +50,9 @@ type ${typeName} = {
         if (convertedDocumentValue === "timestamp") {
           return "firebase.firestore.Timestamp";
         }
+        if (convertedDocumentValue === "ref") {
+          return "firebase.firestore.DocumentReference";
+        }
         return convertedDocumentValue;
       })
       .join(" | ");
