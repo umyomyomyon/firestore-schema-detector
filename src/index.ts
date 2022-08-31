@@ -1,12 +1,21 @@
+import { writeFileSync } from "fs";
 import { initFirebaseApp } from "./firebase";
-import { getDocumentData, checkTimeStamp } from "./firestore";
-import { collectionName, docId } from "./constants";
+import { getDocuments } from "./firestore";
+import { collectionName } from "./constants";
+import { convertDocs } from "./convert/convert";
+import { DocsIntegrater } from "./join/join";
+import { ViewTextBuilder } from "./view/builder";
 
 initFirebaseApp();
 
-getDocumentData(collectionName, docId)
-  .then((res) => {
-    checkTimeStamp(res);
-    console.log(res);
-  })
-  .catch((e) => console.error(e));
+const main = async () => {
+  const docs = await getDocuments(collectionName);
+  const convertedDocs = convertDocs(docs);
+  const integrater = new DocsIntegrater(convertedDocs);
+  const [joinReslt, joinMeta] = integrater.joinDocs();
+  const builder = new ViewTextBuilder(joinReslt, joinMeta);
+  const text = builder.build("document");
+  writeFileSync("output.ts", text);
+};
+
+main().catch((err) => console.error(err));
