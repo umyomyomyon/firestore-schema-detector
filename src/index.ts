@@ -1,14 +1,18 @@
 import { writeFileSync } from "fs";
+import { program } from "commander";
 import { initFirebaseApp } from "./firebase";
 import { getDocuments } from "./firestore";
-import { collectionName } from "./constants";
 import { convertDocs } from "./convert/convert";
 import { DocsIntegrater } from "./join/join";
 import { ViewTextBuilder } from "./view/builder";
 
-initFirebaseApp();
+program.option("-c, --collection <collectionName>");
+program.parse();
 
+initFirebaseApp();
 const main = async () => {
+  const opts = program.opts();
+  const collectionName = opts.collection as string;
   const docs = await getDocuments(collectionName);
   const convertedDocs = convertDocs(docs);
   const integrater = new DocsIntegrater(convertedDocs);
