@@ -10,6 +10,14 @@ describe("stringify tests", () => {
     expect(stringify(input)).toBe(e);
   });
 
+  it("ref", () => {
+    const input: ConvertedDocument = {
+      ref: "ref",
+    };
+    const e = `{ref:firebase.firestore.DocumentReference}`;
+    expect(stringify(input)).toBe(e);
+  });
+
   it("2 keys", () => {
     const input: ConvertedDocument = {
       key: "string",

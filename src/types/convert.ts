@@ -6,7 +6,8 @@ export type TypeString =
   | "array"
   | "{}"
   | "map"
-  | "timestamp";
+  | "timestamp"
+  | "ref";
 
 // recursive type definition
 // eslint-disable-next-line no-use-before-define

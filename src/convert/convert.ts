@@ -25,6 +25,9 @@ export const convert = (field: unknown): TypeString | undefined => {
     if (keys.includes("_seconds") && keys.includes("_nanoseconds")) {
       return "timestamp";
     }
+    if (keys.includes("_firestore") && keys.includes("_path")) {
+      return "ref";
+    }
     return "map";
   }
   return undefined;
